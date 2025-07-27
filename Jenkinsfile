@@ -4,13 +4,14 @@ pipeline {
     environment {
         DEPLOY_IP = '172.26.240.11'   // Replace with your actual WSL IP
     }
+
     stages {
         stage('Clone') {
             steps {
                 git url: 'https://github.com/amreshsharma199/flaskapp.git', branch: 'main'
             }
         }
-    stages {
+
         stage('Build Docker Image') {
             steps {
                 echo 'Building Docker Image...'
