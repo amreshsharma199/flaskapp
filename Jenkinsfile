@@ -1,39 +1,36 @@
 pipeline {
-  agent { label 'jenkinsslave' }
+    agent { label 'jenkinsslave' }
 
-  stages {
-    stage('Clone') {
-      steps {
-        git url: 'https://github.com/amreshsharma199/flaskapp.git'
-      }
+    environment {
+        DEPLOY_IP = '172.26.240.11'   // Replace with your actual WSL IP
     }
 
-    stage('Test') {
-      steps {
-        sh 'docker run --rm -v $PWD:/app -w /app python:3.9-slim bash -c "pip install -r requirements.txt && pytest test_app.py"'
-      }
-    }
-
-    stage('Build Docker Image') {
-      steps {
-        sh 'docker build -t flask-jenkins-app .'
-      }
-    }
-
-    stage('Deploy to WSL') {
-      steps {
-        sshagent(credentials: ['jenkins-agent-key']) {
-          sh '''
-          docker save flask-jenkins-app | bzip2 | ssh -o StrictHostKeyChecking=no jenkins@172.26.240.11 'bunzip2 | docker load'
-          ssh jenkins@172.26.240.11 "docker rm -f myapp || true && docker run -d -p 5000:5000 flask-jenkins-app"
-          '''
+    stages {
+        stage('Build Docker Image') {
+            steps {
+                echo 'Building Docker Image...'
+                sh 'docker build -t flask-jenkins-app .'
+            }
         }
-      }
+
+        stage('Test') {
+            steps {
+                echo 'Running tests...'
+                sh 'python3 test_app.py'
+            }
+        }
+
+        stage('Deploy to WSL') {
+            steps {
+                echo "Deploying to WSL..."
+                sh """
+                ssh -o StrictHostKeyChecking=no amresh@${DEPLOY_IP} 'docker rm -f flaskapp || true'
+                ssh amresh@${DEPLOY_IP} 'docker run -d --name flaskapp -p 5000:5000 flask-jenkins-app'
+                """
+            }
+        }
     }
-  }
 }
-
-
 // pipeline {
 //     agent { label 'jenkinsslave' }
 
