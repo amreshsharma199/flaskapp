@@ -22,7 +22,7 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Running tests...'
-                sh 'python3 test_app.py'
+                sh 'docker run --rm flask-jenkins-app python3 test_app.py'
             }
         }
 
