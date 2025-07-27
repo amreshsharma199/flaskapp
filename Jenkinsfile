@@ -30,8 +30,8 @@ pipeline {
             steps {
                 echo "Deploying to WSL..."
                 sh """
-                ssh -o StrictHostKeyChecking=no amresh@${DEPLOY_IP} 'docker rm -f flaskapp || true'
-                ssh amresh@${DEPLOY_IP} 'docker run -d --name flaskapp -p 5000:5000 flask-jenkins-app'
+                ssh -o StrictHostKeyChecking=no amresh@${DEPLOY_IP} 'docker rm -f myapp || true'
+                ssh amresh@${DEPLOY_IP} 'docker run -d --name myapp -p 5000:5000 flask-jenkins-app'
                 """
             }
         }
