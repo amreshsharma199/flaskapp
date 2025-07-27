@@ -30,13 +30,20 @@ pipeline {
             steps {
                 echo "Deploying to WSL..."
                 sh """
+                docker save flask-jenkins-app -o myapp.tar
+                scp myapp.tar amresh@${DEPLOY_IP}:/home/amresh/
+                ssh -o StrictHostKeyChecking=no amresh@${DEPLOY_IP} 'docker load -i myapp.tar'
                 ssh -o StrictHostKeyChecking=no amresh@${DEPLOY_IP} 'docker rm -f myapp || true'
-                ssh amresh@${DEPLOY_IP} 'docker run -d --name myapp -p 5000:5000 flask-jenkins-app'
+                ssh -o StrictHostKeyChecking=no amresh@${DEPLOY_IP} 'docker run -d --name myapp -p 5000:5000 flask-jenkins-app'
+        
                 """
             }
         }
     }
 }
+ // ssh -o StrictHostKeyChecking=no amresh@${DEPLOY_IP} 'docker rm -f myapp || true'
+                // ssh amresh@${DEPLOY_IP} 'docker run -d --name myapp -p 5000:5000 flask-jenkins-app'
+               
 // pipeline {
 //     agent { label 'jenkinsslave' }
 
