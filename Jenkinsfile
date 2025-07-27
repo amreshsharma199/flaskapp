@@ -23,7 +23,7 @@ pipeline {
            steps {
              sshagent(['wsl-ssh-key']) {
                  sh '''
-                    ssh amresh@172.26.240.11 "docker rm -f myapp || true && docker run -d -p 5000:5000 myimage"
+                    ssh jenkins@172.26.240.11 "docker rm -f myapp || true && docker run -d -p 5000:5000 myimage"
                 '''
     }
   }
