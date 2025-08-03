@@ -2,7 +2,7 @@ pipeline {
     agent { label 'jenkinsslave' }
 
     environment {
-        DEPLOY_IP = '192.168.1.24'   // Replace with your actual WSL IP
+        DEPLOY_IP = '192.168.1.12'   // Replace with your actual WSL IP
     }
 
     stages {
