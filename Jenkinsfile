@@ -2,7 +2,7 @@ pipeline {
     agent { label 'jenkinsslave' }
 
     environment {
-        DEPLOY_IP = '172.26.240.11'   // Replace with your actual WSL IP
+        DEPLOY_IP = '192.168.1.89'   // Replace with your actual WSL IP
     }
 
     stages {
@@ -34,7 +34,7 @@ pipeline {
                 scp myapp.tar amresh@${DEPLOY_IP}:/home/amresh/
                 ssh -o StrictHostKeyChecking=no amresh@${DEPLOY_IP} 'docker load -i myapp.tar'
                 ssh -o StrictHostKeyChecking=no amresh@${DEPLOY_IP} 'docker rm -f myapp || true'
-                ssh -o StrictHostKeyChecking=no amresh@${DEPLOY_IP} 'docker run -d --name myapp -p 5000:5000 flask-jenkins-app'
+                ssh -o StrictHostKeyChecking=no amresh@${DEPLOY_IP} 'docker run -d --name myapp -p 5100:5000 flask-jenkins-app'
         
                 """
             }
